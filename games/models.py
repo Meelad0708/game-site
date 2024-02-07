@@ -9,6 +9,7 @@ class Shooter(models.Model):
 class ShooterGame(models.Model):
     title = models.CharField(max_length=100)
     genre = models.ForeignKey(Shooter, on_delete=models.CASCADE)
+    rating = models.IntegerField(default=0)
     release = models.DateTimeField('Release Date')
     publisher = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
@@ -23,6 +24,7 @@ class RPG(models.Model):
 class RPGGame(models.Model):
     title = models.CharField(max_length=100)
     genre = models.ForeignKey(RPG, on_delete=models.CASCADE)
+    rating = models.IntegerField(default=0)
     release = models.DateTimeField('Release Date')
     publisher = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
@@ -37,6 +39,7 @@ class Sports(models.Model):
 class SportsGame(models.Model):
     title = models.CharField(max_length=100)
     genre = models.ForeignKey(Sports, on_delete=models.CASCADE)
+    rating = models.IntegerField(default=0)
     release = models.DateTimeField('Release Date')
     publisher = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
