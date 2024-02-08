@@ -15,6 +15,8 @@ class ShooterGameType(DjangoObjectType):
         fields = ('id', 'title', 'genre', 'rating', 'release', 'publisher', 'description')
 
 
+
+
 class RPGType(DjangoObjectType):
     class Meta:
         model = RPG
@@ -25,6 +27,7 @@ class RPGGameType(DjangoObjectType):
     class Meta:
         model = RPGGame
         fields = ('id', 'title', 'genre', 'rating', 'release', 'publisher', 'description')
+
 
 
 class SportsType(DjangoObjectType):
@@ -74,5 +77,88 @@ class Query(graphene.ObjectType):
         except Sports.DoesNotExist:
             return None
 
+class ShooterGameMutation(graphene.Mutation):
+    class Arguments:
+        title = graphene.String(required=True)
+        genre = graphene.ID(required=True)
+        rating = graphene.Int()
+        release = graphene.DateTime()
+        publisher = graphene.String()
 
-schema = graphene.Schema(query=Query)
+    shooter_game = graphene.Field(ShooterGameType)
+
+    @classmethod
+    def mutate(cls, root, info, title, genre, rating, release, publisher):
+        shooter = Shooter.objects.get(id=genre)
+
+        shooter_game = ShooterGame()
+        shooter_game.title = title
+        shooter_game.genre = shooter
+        shooter_game.rating = rating
+        shooter_game.release = release
+        shooter_game.publisher = publisher
+
+        shooter_game.save()
+
+        return ShooterGameMutation(shooter_game=shooter_game)
+
+
+class RPGGameMutation(graphene.Mutation):
+    class Arguments:
+        title = graphene.String(required=True)
+        genre = graphene.ID(required=True)
+        rating = graphene.Int()
+        release = graphene.DateTime()
+        publisher = graphene.String()
+
+    rpg_game = graphene.Field(RPGGameType)
+
+    @classmethod
+    def mutate(cls, root, info, title, genre, rating, release, publisher):
+        rpg = RPG.objects.get(id=genre)
+
+        rpg_game = RPGGame()
+        rpg_game.title = title
+        rpg_game.genre = rpg
+        rpg_game.rating = rating
+        rpg_game.release = release
+        rpg_game.publisher = publisher
+
+        rpg_game.save()
+
+        return RPGGameMutation(rpg_game=rpg_game)
+
+
+class SportsGameMutation(graphene.Mutation):
+    class Arguments:
+        title = graphene.String(required=True)
+        genre = graphene.ID(required=True)
+        rating = graphene.Int()
+        release = graphene.DateTime()
+        publisher = graphene.String()
+
+    sports_game = graphene.Field(SportsGameType)
+
+    @classmethod
+    def mutate(cls, root, info, title, genre, rating, release, publisher):
+        sport = Sports.objects.get(id=genre)
+
+        sports_game = SportsGame()
+        sports_game.title = title
+        sports_game.genre = sport
+        sports_game.rating = rating
+        sports_game.release = release
+        sports_game.publisher = publisher
+
+        sports_game.save()
+
+        return SportsGameMutation(sports_game=sports_game)
+
+
+class Mutation(graphene.ObjectType):
+    create_shooter_game = ShooterGameMutation.Field()
+    create_rpg_game = RPGGameMutation.Field()
+    create_sports_game = SportsGameMutation.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
