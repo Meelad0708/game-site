@@ -15,8 +15,6 @@ class ShooterGameType(DjangoObjectType):
         fields = ('id', 'title', 'genre', 'rating', 'release', 'publisher', 'description')
 
 
-
-
 class RPGType(DjangoObjectType):
     class Meta:
         model = RPG
@@ -27,7 +25,6 @@ class RPGGameType(DjangoObjectType):
     class Meta:
         model = RPGGame
         fields = ('id', 'title', 'genre', 'rating', 'release', 'publisher', 'description')
-
 
 
 class SportsType(DjangoObjectType):
@@ -76,6 +73,7 @@ class Query(graphene.ObjectType):
             return Sports.objects.get(name=name)
         except Sports.DoesNotExist:
             return None
+
 
 class ShooterGameMutation(graphene.Mutation):
     class Arguments:
